@@ -1,4 +1,4 @@
-const API_BASE = window.location.origin;
+const API_BASE = "https://startupforge-os-production.up.railway.app";
 const WS_BASE = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host;
 
 let marketChartInstance = null;
@@ -9,7 +9,7 @@ let animationId = null;
 // Operating System state variables
 let projectResults = null;
 let currentSlideIndex = 0;
-let workflowStage = 1; 
+let workflowStage = 1;
 let chosenBrandName = "";
 let chosenPricingModel = "";
 let versionLogs = [];
@@ -81,11 +81,11 @@ document.getElementById('forgot-form').addEventListener('submit', (e) => {
     e.preventDefault();
     const targetVal = document.getElementById('forgot-identifier').value.trim();
     if (!targetVal) return;
-    
+
     alert(`Verification recover OTP code sent successfully to ${targetVal}`);
     forgotFormContainer.classList.remove('active');
     verifyFormContainer.classList.add('active');
-    
+
     const otpDigits = document.querySelectorAll('.otp-digit');
     if (otpDigits.length > 0) otpDigits[0].focus();
 });
@@ -111,7 +111,7 @@ document.getElementById('verify-form').addEventListener('submit', (e) => {
         alert('Please enter complete 6-digit verification code.');
         return;
     }
-    
+
     alert('OTP Verified!');
     loginUser("Verified User", "verified@example.com", "+919876543210");
 });
@@ -121,37 +121,37 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const identifier = document.getElementById('login-identifier').value.trim();
     const pass = document.getElementById('login-password').value;
-    
+
     if (pass.length < 6) {
         alert('Password must be at least 6 characters.');
         return;
     }
-    
+
     try {
         const response = await fetch(`${API_BASE}/api/v1/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ identifier: identifier, password: pass })
         });
-        
+
         const data = await response.json();
         if (!response.ok) {
             alert(data.detail || 'Login failed.');
             return;
         }
-        
+
         // Save token state locally
         gitHubToken = data.user.github_token;
         vercelToken = data.user.vercel_token;
         supabaseToken = data.user.supabase_token;
-        
+
         localStorage.setItem('startupforge_github_token', gitHubToken);
         localStorage.setItem('startupforge_vercel_token', vercelToken);
         localStorage.setItem('startupforge_supabase_token', supabaseToken);
-        
+
         loginUser(data.user.name, data.user.email, data.user.mobile, data.user.id);
         alert('Signed in successfully!');
-        
+
     } catch (err) {
         console.error(err);
         alert('Server connection error. Please verify the backend is active.');
@@ -161,27 +161,27 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
 // Handle Registration submit
 document.getElementById('register-form').addEventListener('submit', async (e) => {
     e.preventDefault();
-    
+
     const name = document.getElementById('reg-name').value.trim();
     const email = document.getElementById('reg-email').value.trim();
     const mobile = document.getElementById('reg-mobile').value.trim();
     const pass = document.getElementById('reg-password').value;
-    
+
     if (pass.length < 6) {
         alert('Password must be at least 6 characters.');
         return;
     }
-    
+
     // Get credentials tokens
     const githubInput = document.getElementById('reg-github-token').value.trim();
     const vercelInput = document.getElementById('reg-vercel-token').value.trim();
     const supabaseInput = document.getElementById('reg-supabase-token').value.trim();
-    
+
     if (!githubInput) {
         alert('GitHub Access Token is compulsory to launch repository scaffolds.');
         return;
     }
-    
+
     try {
         const response = await fetch(`${API_BASE}/api/v1/auth/register`, {
             method: 'POST',
@@ -196,25 +196,25 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
                 supabase_token: supabaseInput
             })
         });
-        
+
         const data = await response.json();
         if (!response.ok) {
             alert(data.detail || 'Registration failed.');
             return;
         }
-        
+
         // Save locally
         gitHubToken = githubInput;
         vercelToken = vercelInput;
         supabaseToken = supabaseInput;
-        
+
         localStorage.setItem('startupforge_github_token', githubInput);
         localStorage.setItem('startupforge_vercel_token', vercelInput);
         localStorage.setItem('startupforge_supabase_token', supabaseInput);
-        
+
         alert('Account created and credentials registered successfully!');
         loginUser(name, email, mobile, data.user_id);
-        
+
     } catch (err) {
         console.error(err);
         alert('Server connection error during registration.');
@@ -224,17 +224,17 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
 function loginUser(name, email, mobile, userId) {
     currentUser = { id: userId, name, email, mobile };
     currentUserId = userId;
-    
+
     localStorage.setItem('startupforge_user_id', userId);
     localStorage.setItem('startupforge_user_name', name);
     localStorage.setItem('startupforge_user_email', email);
     localStorage.setItem('startupforge_user_mobile', mobile);
-    
+
     authPortal.classList.add('hidden');
     appWrapper.classList.remove('hidden');
-    
+
     document.getElementById('user-display-name').textContent = name;
-    
+
     document.getElementById('update-github-token').value = gitHubToken;
     document.getElementById('update-vercel-token').value = vercelToken;
     document.getElementById('update-supabase-token').value = supabaseToken;
@@ -245,10 +245,10 @@ document.getElementById('logout-btn').addEventListener('click', () => {
     currentUser = null;
     currentUserId = null;
     localStorage.clear(); // Clear all user keys
-    
+
     authPortal.classList.remove('hidden');
     appWrapper.classList.add('hidden');
-    
+
     document.getElementById('login-identifier').value = "";
     document.getElementById('login-password').value = "";
     otpDigits.forEach(input => input.value = "");
@@ -279,17 +279,17 @@ document.getElementById('credentials-update-form').addEventListener('submit', as
     const githubVal = document.getElementById('update-github-token').value.trim();
     const vercelVal = document.getElementById('update-vercel-token').value.trim();
     const supabaseVal = document.getElementById('update-supabase-token').value.trim();
-    
+
     if (!githubVal) {
         alert('GitHub Access Token is required.');
         return;
     }
-    
+
     if (!currentUserId) {
         alert('You must be signed in to update credentials.');
         return;
     }
-    
+
     try {
         const response = await fetch(`${API_BASE}/api/v1/auth/update-credentials`, {
             method: 'POST',
@@ -301,25 +301,25 @@ document.getElementById('credentials-update-form').addEventListener('submit', as
                 supabase_token: supabaseVal
             })
         });
-        
+
         const data = await response.json();
         if (!response.ok) {
             alert(data.detail || 'Failed to update credentials.');
             return;
         }
-        
+
         gitHubToken = githubVal;
         localStorage.setItem('startupforge_github_token', githubVal);
-        
+
         vercelToken = vercelVal;
         localStorage.setItem('startupforge_vercel_token', vercelVal);
-        
+
         supabaseToken = supabaseVal;
         localStorage.setItem('startupforge_supabase_token', supabaseVal);
-        
+
         alert('Credentials updated successfully in database!');
         credentialsModal.classList.add('hidden');
-        
+
     } catch (err) {
         console.error(err);
         alert('Server connection error during credentials update.');
@@ -381,21 +381,21 @@ if (SpeechRecognition) {
 window.addEventListener('load', async () => {
     const geoBadge = document.getElementById('geo-badge');
     const selector = document.getElementById('region-selector');
-    
+
     // Auto-login session restore
     if (currentUser) {
         loginUser(currentUser.name, currentUser.email, currentUser.mobile, currentUser.id);
     }
-    
+
     try {
         geoBadge.textContent = 'Detecting Region...';
         const response = await fetch('https://ipapi.co/json/');
         if (!response.ok) throw new Error('IP API error');
-        
+
         const ipData = await response.json();
-        const country = ipData.country_code; 
-        const currency = ipData.currency; 
-        
+        const country = ipData.country_code;
+        const currency = ipData.currency;
+
         if (country === 'IN' || currency === 'INR') {
             selector.value = 'IN';
             geoBadge.textContent = `📍 India (INR)`;
@@ -409,7 +409,7 @@ window.addEventListener('load', async () => {
             selector.value = 'US';
             geoBadge.textContent = `📍 United States (USD)`;
         }
-        
+
         updateCurrencyConfig();
     } catch (err) {
         console.error('IP location error:', err);
@@ -423,36 +423,36 @@ window.addEventListener('load', async () => {
 document.getElementById('gps-btn').addEventListener('click', () => {
     const gpsBtn = document.getElementById('gps-btn');
     const geoBadge = document.getElementById('geo-badge');
-    
+
     if (!navigator.geolocation) {
         alert('Geolocation is not supported by your browser.');
         return;
     }
-    
+
     gpsBtn.classList.add('locating');
     geoBadge.textContent = 'Locating via GPS...';
-    
+
     navigator.geolocation.getCurrentPosition(
         (position) => {
             gpsBtn.classList.remove('locating');
             const lat = position.coords.latitude;
             const lon = position.coords.longitude;
-            
+
             const selector = document.getElementById('region-selector');
-            if (lat > 5 && lat < 38 && lon > 68 && lon < 97) { 
+            if (lat > 5 && lat < 38 && lon > 68 && lon < 97) {
                 selector.value = 'IN';
                 geoBadge.textContent = `📍 GPS: India (₹)`;
-            } else if (lat > 35 && lat < 70 && lon > -10 && lon < 30) { 
+            } else if (lat > 35 && lat < 70 && lon > -10 && lon < 30) {
                 selector.value = 'EU';
                 geoBadge.textContent = `📍 GPS: Europe (€)`;
-            } else if (lat > 49 && lat < 60 && lon > -8 && lon < 2) { 
+            } else if (lat > 49 && lat < 60 && lon > -8 && lon < 2) {
                 selector.value = 'GB';
                 geoBadge.textContent = `📍 GPS: UK (£)`;
             } else {
                 selector.value = 'US';
                 geoBadge.textContent = `📍 GPS: United States ($)`;
             }
-            
+
             updateCurrencyConfig();
             if (projectResults) {
                 renderDashboard(projectResults);
@@ -476,7 +476,7 @@ document.getElementById('region-selector').addEventListener('change', () => {
     const badge = document.getElementById('geo-badge');
     const selectedOption = selector.options[selector.selectedIndex];
     badge.textContent = `📍 Manual: ${selectedOption.text.split(' ')[0]}`;
-    
+
     if (projectResults) {
         renderDashboard(projectResults);
     }
@@ -485,7 +485,7 @@ document.getElementById('region-selector').addEventListener('change', () => {
 function updateCurrencyConfig() {
     const selector = document.getElementById('region-selector');
     const selectedOption = selector.options[selector.selectedIndex];
-    
+
     activeCurrencySymbol = selectedOption.getAttribute('data-symbol');
     activeCurrencyRate = parseFloat(selectedOption.getAttribute('data-rate'));
 }
@@ -494,9 +494,9 @@ function updateCurrencyConfig() {
 function formatCurrency(usdValueRaw) {
     const usdVal = parseFloat(usdValueRaw.toString().replace(/[^0-9.]/g, ''));
     if (isNaN(usdVal)) return usdValueRaw;
-    
+
     const converted = usdVal * activeCurrencyRate;
-    
+
     if (converted >= 1000) {
         return `${activeCurrencySymbol}${parseInt(converted).toLocaleString()}`;
     }
@@ -506,7 +506,7 @@ function formatCurrency(usdValueRaw) {
 // Ideation Form Submission
 document.getElementById('idea-form').addEventListener('submit', async (e) => {
     e.preventDefault();
-    
+
     const ideaInputVal = ideaInput.value.trim();
     if (!ideaInputVal) return;
 
@@ -516,17 +516,17 @@ document.getElementById('idea-form').addEventListener('submit', async (e) => {
     const dashboardWrapper = document.getElementById('dashboard-wrapper');
     const workflowProgressSec = document.getElementById('workflow-progress-sec');
     const orchestrationStatus = document.getElementById('orchestration-status');
-    
+
     submitBtn.disabled = true;
     submitBtn.innerHTML = '<span>Forging startup...</span> <i class="fa-solid fa-spinner fa-spin"></i>';
-    
+
     consoleLogs.innerHTML = '';
     consoleSection.classList.remove('hidden');
     dashboardWrapper.classList.add('hidden');
     workflowProgressSec.classList.add('hidden');
     orchestrationStatus.textContent = 'Contacting server...';
     orchestrationStatus.className = 'status-badge';
-    
+
     if (animationId) {
         cancelAnimationFrame(animationId);
     }
@@ -544,7 +544,7 @@ document.getElementById('idea-form').addEventListener('submit', async (e) => {
 
         const data = await response.json();
         currentTaskId = data.task_id;
-        
+
         connectWebSocket(currentTaskId);
 
     } catch (err) {
@@ -565,7 +565,7 @@ function connectWebSocket(taskId) {
 
     ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
-        
+
         if (data.status === 'completed') {
             orchestrationStatus.textContent = 'Completed';
             orchestrationStatus.className = 'status-badge success';
@@ -586,7 +586,7 @@ function appendLog(agent, message) {
     const consoleLogs = document.getElementById('console-logs');
     const logDiv = document.createElement('div');
     logDiv.className = 'log-entry';
-    
+
     const agentLabels = {
         orchestrator: 'Orchestrator',
         market_research: 'Market Researcher',
@@ -609,15 +609,15 @@ function appendLog(agent, message) {
 async function fetchResults(taskId) {
     const response = await fetch(`${API_BASE}/api/v1/results/${taskId}`);
     const resData = await response.json();
-    
+
     if (resData.status === 'completed') {
         projectResults = resData.data;
-        
+
         workflowStage = 1;
         chosenBrandName = "";
         chosenPricingModel = "";
         versionLogs = [`v1.0.0: Initialized validation audit for "${projectResults.name}"`];
-        
+
         document.getElementById('workflow-progress-sec').classList.remove('hidden');
         renderDashboard(projectResults);
         triggerHITLApproval();
@@ -634,7 +634,7 @@ async function fetchResults(taskId) {
 function triggerHITLApproval() {
     const hitlContainer = document.getElementById('hitl-container');
     const hitlContent = document.getElementById('hitl-action-content');
-    
+
     hitlContainer.classList.remove('hidden');
     hitlContent.innerHTML = '';
 
@@ -763,16 +763,16 @@ function renderDashboard(data) {
     document.getElementById('overall-health-val').textContent = `${val}%`;
     document.getElementById('score-idea').textContent = `${val}%`;
     document.getElementById('fill-idea').style.width = `${val}%`;
-    
+
     document.getElementById('score-market').textContent = '75%';
     document.getElementById('fill-market').style.width = '75%';
-    
+
     document.getElementById('score-finance').textContent = '80%';
     document.getElementById('fill-finance').style.width = '80%';
-    
+
     document.getElementById('score-branding').textContent = '90%';
     document.getElementById('fill-branding').style.width = '90%';
-    
+
     document.getElementById('score-code').textContent = '50%';
     document.getElementById('fill-code').style.width = '50%';
 
@@ -917,7 +917,7 @@ function renderDashboard(data) {
     const branding = data.branding;
     const primaryCol = branding.colors.primary;
     const secondaryCol = branding.colors.secondary;
-    
+
     // Logo SVG Preview
     const logoContainer = document.getElementById('logo-preview');
     logoContainer.innerHTML = `
@@ -1050,7 +1050,7 @@ function updatePitchSlide() {
     if (!projectResults) return;
     const slide = projectResults.pitch_deck[currentSlideIndex];
     document.getElementById('slide-title').textContent = slide.title;
-    
+
     let slideText = slide.text;
     if (slideText.includes('$')) {
         const match = slideText.match(/\$([0-9,]+)M?/);
@@ -1075,7 +1075,7 @@ document.getElementById('prev-slide').addEventListener('click', () => {
 document.getElementById('next-slide').addEventListener('click', () => {
     if (currentSlideIndex < 4) {
         currentSlideIndex--;
-        currentSlideIndex = Math.min(currentSlideIndex + 2, 4); 
+        currentSlideIndex = Math.min(currentSlideIndex + 2, 4);
         updatePitchSlide();
     }
 });
@@ -1085,10 +1085,10 @@ document.querySelectorAll('.code-select').forEach(button => {
     button.addEventListener('click', (e) => {
         document.querySelectorAll('.code-select').forEach(b => b.classList.remove('active'));
         e.target.classList.add('active');
-        
+
         const type = e.target.dataset.code;
         const codeBox = document.getElementById('code-content-box');
-        
+
         if (type === 'code-db') {
             codeBox.textContent = projectResults.builder_console.db_schema;
         } else if (type === 'code-docker') {
@@ -1139,7 +1139,7 @@ function setupVideoPromoCanvas(primaryCol, secondaryCol, brandName) {
 function animateVideo(ctx, canvas, color1, color2, name) {
     let frame = 0;
     const maxFrames = 250;
-    
+
     function draw() {
         if (frame >= maxFrames) {
             setupVideoPromoCanvas(color1, color2, name);
@@ -1198,7 +1198,7 @@ function animateVideo(ctx, canvas, color1, color2, name) {
         frame++;
         animationId = requestAnimationFrame(draw);
     }
-    
+
     draw();
 }
 
@@ -1211,12 +1211,12 @@ function triggerDeployFlow(platform) {
 
     const consoleDiv = document.getElementById('deploy-console');
     const logsDiv = document.getElementById('deploy-logs');
-    
+
     consoleDiv.classList.remove('hidden');
     logsDiv.innerHTML = '';
 
     const ws = new WebSocket(`${WS_BASE}/ws/deploy/${currentTaskId}`);
-    
+
     ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
         if (data.log) {
@@ -1232,7 +1232,7 @@ function triggerDeployFlow(platform) {
             logsDiv.appendChild(entry);
             logsDiv.scrollTop = logsDiv.scrollHeight;
             ws.close();
-            
+
             versionLogs.push(`v2.0.0: Successfully launched validated MVP to Vercel Cloud.`);
             updateVersionHistory();
         }
@@ -1255,7 +1255,7 @@ document.getElementById('mentor-chat-form').addEventListener('submit', async (e)
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ task_id: currentTaskId, message: message })
         });
-        
+
         const data = await response.json();
         appendChatBubble('mentor', data.response);
 
@@ -1288,7 +1288,7 @@ function renderMarketChart(tam, sam, som) {
     if (marketChartInstance) {
         marketChartInstance.destroy();
     }
-    
+
     const ctx = document.getElementById('marketChart').getContext('2d');
     marketChartInstance = new Chart(ctx, {
         type: 'doughnut',
@@ -1356,7 +1356,7 @@ function renderRevenueChart(revenueData) {
                     },
                     ticks: {
                         color: '#9ca3af',
-                        callback: function(val) {
+                        callback: function (val) {
                             return activeCurrencySymbol + val + 'k';
                         }
                     }
@@ -1375,7 +1375,7 @@ function renderRevenueChart(revenueData) {
 }
 
 function escapeHTML(str) {
-    return str.replace(/[&<>'"]/g, 
+    return str.replace(/[&<>'"]/g,
         tag => ({
             '&': '&amp;',
             '<': '&lt;',
@@ -1393,18 +1393,18 @@ let cinematicAnimationId = null;
 document.getElementById('gen-web-code-btn').addEventListener('click', () => {
     const spin = document.getElementById('web-spin-icon');
     spin.classList.remove('hidden');
-    
+
     setTimeout(() => {
         spin.classList.add('hidden');
         if (!projectResults) return;
-        
+
         const primaryCol = projectResults.branding.colors.primary;
         const secondaryCol = projectResults.branding.colors.secondary;
         const brandName = projectResults.name;
         const tagline = projectResults.branding.taglines[0] || "Revolutionizing Startup Scaling";
         const problem = projectResults.business_plan.lean_canvas.problem;
         const solution = projectResults.business_plan.lean_canvas.solution;
-        
+
         // Generate Next.js React Code String
         const reactCode = `import Head from 'next/head';
 
@@ -1484,7 +1484,7 @@ export default function Home() {
 }`;
 
         document.getElementById('web-code-content-box').textContent = reactCode;
-        
+
         // Generate Sandbox Preview IFrame srcdoc Content
         const htmlDoc = `
           <!DOCTYPE html>
@@ -1530,7 +1530,7 @@ export default function Home() {
           </body>
           </html>
         `;
-        
+
         document.getElementById('sandbox-iframe').srcdoc = htmlDoc;
     }, 1500);
 });
@@ -1539,21 +1539,21 @@ export default function Home() {
 document.getElementById('cinematic-play-btn').addEventListener('click', () => {
     const canvas = document.getElementById('cinematicVideoCanvas');
     const ctx = canvas.getContext('2d');
-    
+
     if (cinematicAnimationId) {
         cancelAnimationFrame(cinematicAnimationId);
     }
-    
+
     if (!projectResults) return;
-    
+
     const primaryCol = projectResults.branding.colors.primary;
     const secondaryCol = projectResults.branding.colors.secondary;
     const brandName = projectResults.name;
     const tagline = projectResults.branding.taglines[0] || "Revolutionizing Startup Scaling";
-    
+
     let frame = 0;
     const maxFrames = 480;
-    
+
     function drawCinematic() {
         if (frame >= maxFrames) {
             ctx.fillStyle = '#050811';
@@ -1564,10 +1564,10 @@ document.getElementById('cinematic-play-btn').addEventListener('click', () => {
             ctx.fillText("Cinematic Ad Demo Finished.", canvas.width / 2, canvas.height / 2);
             return;
         }
-        
+
         ctx.fillStyle = '#03050a';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
+
         // Panning grids background
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.015)';
         ctx.lineWidth = 1;
@@ -1578,7 +1578,7 @@ document.getElementById('cinematic-play-btn').addEventListener('click', () => {
             ctx.lineTo(x + offset - 30, canvas.height);
             ctx.stroke();
         }
-        
+
         // Scene timelines
         if (frame < 120) {
             // Scene 1: Introduction text
@@ -1601,7 +1601,7 @@ document.getElementById('cinematic-play-btn').addEventListener('click', () => {
             ctx.beginPath();
             ctx.arc(canvas.width / 2, canvas.height / 2, 120 * orbScale, 0, Math.PI * 2);
             ctx.fill();
-            
+
             // Rotating neon frame
             ctx.save();
             ctx.translate(canvas.width / 2, canvas.height / 2);
@@ -1610,7 +1610,7 @@ document.getElementById('cinematic-play-btn').addEventListener('click', () => {
             ctx.lineWidth = 2;
             ctx.strokeRect(-60, -60, 120, 120);
             ctx.restore();
-            
+
             ctx.fillStyle = 'rgba(255,255,255,' + Math.min(1, (frame - 120) / 30, (260 - frame) / 30) + ')';
             ctx.font = "bold 26px 'Outfit', sans-serif";
             ctx.textAlign = 'center';
@@ -1622,7 +1622,7 @@ document.getElementById('cinematic-play-btn').addEventListener('click', () => {
             ctx.font = "bold 20px 'Outfit', sans-serif";
             ctx.textAlign = 'center';
             ctx.fillText(tagline, canvas.width / 2, canvas.height / 2 - 20 + slideOffset);
-            
+
             ctx.font = "14px 'Plus Jakarta Sans', sans-serif";
             ctx.fillStyle = primaryCol;
             ctx.fillText("Calibrated by Coordinated Agent Networks.", canvas.width / 2, canvas.height / 2 + 25);
@@ -1632,15 +1632,15 @@ document.getElementById('cinematic-play-btn').addEventListener('click', () => {
             ctx.font = "bold 32px 'Outfit', sans-serif";
             ctx.textAlign = 'center';
             ctx.fillText(brandName, canvas.width / 2, canvas.height / 2 - 20);
-            
+
             ctx.font = "14px 'Plus Jakarta Sans', sans-serif";
             ctx.fillStyle = '#9ca3af';
             ctx.fillText("Generated on StartupForge OS.", canvas.width / 2, canvas.height / 2 + 20);
         }
-        
+
         frame++;
         cinematicAnimationId = requestAnimationFrame(drawCinematic);
     }
-    
+
     drawCinematic();
 });
