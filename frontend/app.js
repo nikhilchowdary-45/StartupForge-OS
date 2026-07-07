@@ -1,6 +1,6 @@
 const API_BASE = "https://startupforge-os-production.up.railway.app";
-const WS_BASE = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host;
-
+const WS_BASE =
+    "wss://startupforge-os-production.up.railway.app";
 let marketChartInstance = null;
 let revenueChartInstance = null;
 let currentTaskId = null;
