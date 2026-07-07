@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StartupForge OS - Startup Operating System</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Background glow gradients -->
+    <div class="glow-bg glow-cyan"></div>
+    <div class="glow-bg glow-emerald"></div>
+
+    <!-- Auth Portal (Split Screen Layout) -->
+    <div id="auth-portal" class="auth-portal">
+        <div class="auth-wrapper glass">
+            <!-- LEFT PANEL: Premium App Logo & Branding -->
+            <div class="auth-branding">
+                <div class="branding-logo-wrapper">
+                    <img src="logo.jpg" alt="StartupForge Logo" class="app-logo-main">
+                </div>
+                <div class="branding-content">
+                    <h2>StartupForge <span class="text-gradient">OS</span></h2>
+                    <p class="branding-pitch">The Coordinated AI Agent Network to validate, brand, scaffold, and deploy your startup MVPs instantly.</p>
+                </div>
+                <div class="branding-features">
+                    <div class="brand-feat-item">
+                        <i class="fa-solid fa-brain text-cyan"></i>
+                        <span>Coordinated Multi-Agent Auditing</span>
+                    </div>
+                    <div class="brand-feat-item">
+                        <i class="fa-solid fa-gears text-emerald"></i>
+                        <span>One-Click Cloud DevOps Pipelines</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT PANEL: Animated Forms -->
+            <div class="auth-forms">
+                <!-- TABS FOR LOGIN / REGISTER -->
+                <div class="auth-tabs">
+                    <button id="tab-login-btn" class="auth-tab-btn active">Sign In</button>
+                    <button id="tab-register-btn" class="auth-tab-btn">Register</button>
+                </div>
+
+                <!-- LOGIN FORM -->
+                <div id="login-form-container" class="auth-form-container active">
+                    <form id="login-form">
+                        <div class="form-title">
+                            <h2>Welcome Back</h2>
+                            <p>Access the StartupForge Operating System</p>
+                        </div>
+                        <div class="form-group">
+                            <label for="login-identifier">Email or Mobile Number</label>
+                            <div class="form-input-wrapper">
+                                <i class="fa-solid fa-user"></i>
+                                <input type="text" id="login-identifier" placeholder="e.g., mail@example.com or +919876543210" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="login-password">Password</label>
+                            <div class="form-input-wrapper">
+                                <i class="fa-solid fa-lock"></i>
+                                <input type="password" id="login-password" placeholder="••••••••" required>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" id="forgot-password-btn" class="forgot-link">Forgot password?</button>
+                        </div>
+                        <button type="submit" class="btn btn-primary auth-submit-btn">
+                            <span>Sign In</span>
+                            <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- REGISTRATION FORM -->
+                <div id="register-form-container" class="auth-form-container">
+                    <form id="register-form">
+                        <div class="form-title">
+                            <h2>Create Account</h2>
+                            <p>Configure credentials and start building</p>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="reg-name">Full Name</label>
+                                <div class="form-input-wrapper">
+                                    <i class="fa-solid fa-user-tag"></i>
+                                    <input type="text" id="reg-name" placeholder="John Doe" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="reg-email">Email Address</label>
+                                <div class="form-input-wrapper">
+                                    <i class="fa-solid fa-envelope"></i>
+                                    <input type="email" id="reg-email" placeholder="mail@example.com" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="reg-mobile">Mobile Number</label>
+                                <div class="form-input-wrapper">
+                                    <i class="fa-solid fa-phone"></i>
+                                    <input type="text" id="reg-mobile" placeholder="+919876543210" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="reg-password">Password</label>
+                                <div class="form-input-wrapper">
+                                    <i class="fa-solid fa-key"></i>
+                                    <input type="password" id="reg-password" placeholder="Minimum 6 characters" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Integration Credentials Section -->
+                        <div class="credentials-setup mt-3">
+                            <h4><i class="fa-solid fa-plug text-cyan"></i> Deployment Integrations</h4>
+                            <div class="form-grid mt-2">
+                                <div class="form-group">
+                                    <label for="reg-github-token">GitHub Access Token <span class="required-lbl">*Required</span></label>
+                                    <div class="form-input-wrapper">
+                                        <i class="fa-brands fa-github"></i>
+                                        <input type="password" id="reg-github-token" placeholder="ghp_••••••••••••" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="reg-vercel-token">Vercel API Key <span class="optional-lbl">(Optional)</span></label>
+                                    <div class="form-input-wrapper">
+                                        <i class="fa-solid fa-cloud"></i>
+                                        <input type="password" id="reg-vercel-token" placeholder="vc_••••••••••••">
+                                    </div>
+                                </div>
+                                <div class="form-group" style="grid-column: span 2;">
+                                    <label for="reg-supabase-token">Supabase Project API Key <span class="optional-lbl">(Optional)</span></label>
+                                    <div class="form-input-wrapper">
+                                        <i class="fa-solid fa-database"></i>
+                                        <input type="password" id="reg-supabase-token" placeholder="sb_••••••••••••">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary auth-submit-btn mt-4">
+                            <span>Register & Setup</span>
+                            <i class="fa-solid fa-user-plus"></i>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- FORGOT PASSWORD FORM -->
+                <div id="forgot-form-container" class="auth-form-container">
+                    <form id="forgot-form">
+                        <div class="form-title">
+                            <h2>Recover Password</h2>
+                            <p>We will send a verification code to recover your account</p>
+                        </div>
+                        <div class="form-group">
+                            <label for="forgot-identifier">Enter Email or Mobile</label>
+                            <div class="form-input-wrapper">
+                                <i class="fa-solid fa-paper-plane"></i>
+                                <input type="text" id="forgot-identifier" placeholder="e.g., mail@example.com or +919876543210" required>
+                            </div>
+                        </div>
+                        <div class="form-actions mt-3">
+                            <button type="button" id="back-to-login-btn" class="btn btn-secondary btn-sm">Back</button>
+                            <button type="submit" class="btn btn-primary btn-sm">Send Code</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- OTP VERIFICATION SCREEN -->
+                <div id="verify-form-container" class="auth-form-container">
+                    <form id="verify-form">
+                        <div class="form-title">
+                            <h2>Verify Account</h2>
+                            <p>Enter the 6-digit OTP code sent to your device</p>
+                        </div>
+                        <div class="form-group">
+                            <div class="otp-inputs-wrapper">
+                                <input type="text" maxlength="1" class="otp-digit" required>
+                                <input type="text" maxlength="1" class="otp-digit" required>
+                                <input type="text" maxlength="1" class="otp-digit" required>
+                                <input type="text" maxlength="1" class="otp-digit" required>
+                                <input type="text" maxlength="1" class="otp-digit" required>
+                                <input type="text" maxlength="1" class="otp-digit" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary auth-submit-btn mt-4">
+                            <span>Verify OTP</span>
+                            <i class="fa-solid fa-shield-check"></i>
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP WRAPPER (Hidden by default, shown after sign-in) -->
+    <div id="app-wrapper" class="app-wrapper hidden">
+        <div class="container">
+            <!-- Header -->
+            <header class="header glass">
+                <div class="logo">
+                    <i class="fa-solid fa-cube logo-icon"></i>
+                    <h1>StartupForge <span class="text-gradient">OS</span></h1>
+                </div>
+                
+                <!-- GeoLocation & Currency controls -->
+                <div class="geo-controls">
+                    <button id="gps-btn" class="gps-btn" title="Auto-detect location via GPS">
+                        <i class="fa-solid fa-location-crosshairs"></i>
+                    </button>
+                    <div class="custom-select-wrapper">
+                        <select id="region-selector" class="region-selector">
+                            <option value="US" data-currency="USD" data-symbol="$" data-rate="1.0">🇺🇸 United States (USD $)</option>
+                            <option value="IN" data-currency="INR" data-symbol="₹" data-rate="83.0">🇮🇳 India (INR ₹)</option>
+                            <option value="EU" data-currency="EUR" data-symbol="€" data-rate="0.92">🇪🇺 Europe (EUR €)</option>
+                            <option value="GB" data-currency="GBP" data-symbol="£" data-rate="0.78">🇬🇧 United Kingdom (GBP £)</option>
+                        </select>
+                    </div>
+                    <span id="geo-badge" class="badge badge-premium">Detecting Region...</span>
+                    <!-- User Control badge -->
+                    <button id="user-badge-btn" class="badge user-badge" title="Manage credentials/keys">
+                        <i class="fa-solid fa-user-circle"></i> <span id="user-display-name">Profile</span>
+                    </button>
+                    <button id="logout-btn" class="logout-btn" title="Sign Out">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- User Credentials Config Modal Overlay (Hidden) -->
+            <div id="credentials-modal" class="modal-overlay hidden">
+                <div class="modal-card glass">
+                    <div class="modal-header">
+                        <h3><i class="fa-solid fa-sliders text-cyan"></i> Deployment Credentials</h3>
+                        <button id="close-modal-btn" class="close-btn">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="credentials-update-form">
+                            <div class="form-group">
+                                <label for="update-github-token">GitHub Access Token <span class="required-lbl">*Required</span></label>
+                                <div class="form-input-wrapper">
+                                    <i class="fa-brands fa-github"></i>
+                                    <input type="password" id="update-github-token" placeholder="ghp_••••••••••••" required>
+                                </div>
+                            </div>
+                            <div class="form-group mt-3">
+                                <label for="update-vercel-token">Vercel API Key <span class="optional-lbl">(Optional)</span></label>
+                                <div class="form-input-wrapper">
+                                    <i class="fa-solid fa-cloud"></i>
+                                    <input type="password" id="update-vercel-token" placeholder="vc_••••••••••••">
+                                </div>
+                            </div>
+                            <div class="form-group mt-3">
+                                <label for="update-supabase-token">Supabase Project API Key <span class="optional-lbl">(Optional)</span></label>
+                                <div class="form-input-wrapper">
+                                    <i class="fa-solid fa-database"></i>
+                                    <input type="password" id="update-supabase-token" placeholder="sb_••••••••••••">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-sm mt-4">Save Configuration</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Ideation Form -->
+            <section class="hero-section glass">
+                <h2>Forge Your Startup Idea</h2>
+                <p class="subtitle">Enter or speak your vision. Our network of coordinated AI agents will validation test, brand design, code structure, and deploy your startup MVP.</p>
+                
+                <form id="idea-form">
+                    <div class="input-group">
+                        <i class="fa-regular fa-lightbulb input-icon"></i>
+                        <input type="text" id="idea-input" placeholder="e.g., A subscription-based smart cat feeder that uses AI to analyze eating habits..." required>
+                        <button type="button" id="voice-btn" class="voice-btn" title="Speak your startup idea">
+                            <i class="fa-solid fa-microphone"></i>
+                        </button>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="submit-btn">
+                        <span>Forge Startup OS</span>
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </button>
+                </form>
+                <div id="voice-status" class="voice-status hidden">Listening... Speak now.</div>
+            </section>
+
+            <!-- Status & Console Logs Section -->
+            <section id="console-section" class="console-section glass hidden">
+                <div class="console-header">
+                    <h3><i class="fa-solid fa-terminal"></i> Agent Orchestrator Stream</h3>
+                    <span class="status-badge" id="orchestration-status">Initializing...</span>
+                </div>
+                <div class="console-logs" id="console-logs"></div>
+            </section>
+
+            <!-- Guided Workflow Progress Bar -->
+            <section id="workflow-progress-sec" class="workflow-progress-sec glass hidden">
+                <div class="workflow-stages-bar">
+                    <div class="workflow-step active" id="step-validation">
+                        <div class="step-circle">1</div>
+                        <span>Validation</span>
+                    </div>
+                    <div class="workflow-step" id="step-market">
+                        <div class="step-circle">2</div>
+                        <span>Market</span>
+                    </div>
+                    <div class="workflow-step" id="step-branding">
+                        <div class="step-circle">3</div>
+                        <span>Branding</span>
+                    </div>
+                    <div class="workflow-step" id="step-pricing">
+                        <div class="step-circle">4</div>
+                        <span>Pricing</span>
+                    </div>
+                    <div class="workflow-step" id="step-devops">
+                        <div class="step-circle">5</div>
+                        <span>Code & DevOps</span>
+                    </div>
+                    <div class="workflow-step" id="step-launch">
+                        <div class="step-circle">6</div>
+                        <span>Launch</span>
+                    </div>
+                </div>
+                
+                <div id="hitl-container" class="hitl-container hidden">
+                    <div class="hitl-header">
+                        <i class="fa-solid fa-circle-exclamation text-gold pulse"></i>
+                        <h4>Human-in-the-Loop Action Required</h4>
+                    </div>
+                    <div id="hitl-action-content" class="hitl-action-content"></div>
+                </div>
+            </section>
+
+            <!-- Main Interactive Dashboard Container -->
+            <div id="dashboard-wrapper" class="dashboard-wrapper">
+                <!-- Navigation Sidebar / Tabs -->
+                <nav class="dashboard-nav glass">
+                    <button class="nav-tab active" data-tab="tab-readiness">
+                        <i class="fa-solid fa-rocket"></i> <span>Health & Readiness</span>
+                    </button>
+                    <button class="nav-tab" data-tab="tab-strategy">
+                        <i class="fa-solid fa-lightbulb"></i> <span>Strategy & Canvas</span>
+                    </button>
+                    <button class="nav-tab" data-tab="tab-builder">
+                        <i class="fa-solid fa-laptop-code"></i> <span>Code & DevOps</span>
+                    </button>
+                    <button class="nav-tab" data-tab="tab-webmedia">
+                        <i class="fa-solid fa-globe"></i> <span>Web & Ads Generator</span>
+                    </button>
+                    <button class="nav-tab" data-tab="tab-marketing">
+                        <i class="fa-solid fa-bullhorn"></i> <span>Marketing & Pitch</span>
+                    </button>
+                    <button class="nav-tab" data-tab="tab-mentor">
+                        <i class="fa-solid fa-brain"></i> <span>AI Mentor Chat</span>
+                    </button>
+                </nav>
+
+                <!-- Tabs Content Area (All elements inside are aligned 1-by-1 vertically) -->
+                <main class="dashboard-content">
+                    
+                    <!-- TAB 1: Health & Readiness -->
+                    <div id="tab-readiness" class="tab-pane active">
+                        <div class="dashboard-grid">
+                            <!-- Card 1: Startup Health Score -->
+                            <div class="card glass card-glow">
+                                <div class="card-header">
+                                    <h3><i class="fa-solid fa-heart-pulse text-pink"></i> Startup Health Score</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="health-summary flex-row items-center mb-4">
+                                        <div class="overall-health-card">
+                                            <span class="health-percent" id="overall-health-val">0%</span>
+                                            <span class="health-lbl">Overall Health</span>
+                                        </div>
+                                        <div class="health-desc">
+                                            <h4>Operational Readiness Audit</h4>
+                                            <p>Calculated health score across research, design, coding and validation systems.</p>
+                                        </div>
+                                    </div>
+                                    <div class="health-bars-list">
+                                        <div class="health-bar-item">
+                                            <div class="bar-info"><span>Idea Validation</span><span id="score-idea">0%</span></div>
+                                            <div class="bar-bg"><div class="bar-fill" id="fill-idea" style="width: 0%;"></div></div>
+                                        </div>
+                                        <div class="health-bar-item">
+                                            <div class="bar-info"><span>Market Sizing</span><span id="score-market">0%</span></div>
+                                            <div class="bar-bg"><div class="bar-fill" id="fill-market" style="width: 0%;"></div></div>
+                                        </div>
+                                        <div class="health-bar-item">
+                                            <div class="bar-info"><span>Financial Model</span><span id="score-finance">0%</span></div>
+                                            <div class="bar-bg"><div class="bar-fill" id="fill-finance" style="width: 0%;"></div></div>
+                                        </div>
+                                        <div class="health-bar-item">
+                                            <div class="bar-info"><span>Branding & Identity</span><span id="score-branding">0%</span></div>
+                                            <div class="bar-bg"><div class="bar-fill" id="fill-branding" style="width: 0%;"></div></div>
+                                        </div>
+                                        <div class="health-bar-item">
+                                            <div class="bar-info"><span>DevOps & Code</span><span id="score-code">0%</span></div>
+                                            <div class="bar-bg"><div class="bar-fill" id="fill-code" style="width: 0%;"></div></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Card 2: AI Critic Audit Report -->
+                            <div class="card glass card-glow">
+                                <div class="card-header">
+                                    <h3><i class="fa-solid fa-circle-exclamation text-gold"></i> AI Critic Audit Report</h3>
+                                </div>
+                                <div class="card-body critic-audit-body">
+                                    <div class="critic-score-box flex-row items-center mb-3">
+                                        <div class="critic-badge"><span id="critic-score">0</span>/100</div>
+                                        <div>
+                                            <h4>Critic Verdict:</h4>
+                                            <p id="critic-verdict" class="text-secondary" style="font-size:0.9rem;"></p>
+                                        </div>
+                                    </div>
+                                    <div class="critic-quads mt-3">
+                                        <h5>Key Weaknesses identified:</h5>
+                                        <ul id="critic-weaknesses" class="swot-quadrant w text-secondary mt-2"></ul>
+                                        <h5 class="mt-3">Action suggestions:</h5>
+                                        <ul id="critic-suggestions" class="swot-quadrant o text-secondary mt-2"></ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Card 3: Competitor Landscape -->
+                            <div class="card glass card-glow">
+                                <div class="card-header">
+                                    <h3><i class="fa-solid fa-users-viewfinder text-blue"></i> Competitor Landscape</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>Competitor</th>
+                                                    <th>Core Strength</th>
+                                                    <th>Key Weakness</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="competitor-table-body"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Card 4: TAM / SAM / SOM Estimates -->
+                            <div class="card glass card-glow">
+                                <div class="card-header">
+                                    <h3><i class="fa-solid fa-chart-pie text-purple"></i> TAM / SAM / SOM Estimates</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="chart-container">
+                                        <canvas id="marketChart"></canvas>
+                                    </div>
+                                    <div class="market-stats" id="market-stats-container"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 2: Strategy & Canvas -->
+                    <div id="tab-strategy" class="tab-pane">
+                        <div class="dashboard-grid">
+                            <!-- Card 1: Project Manager Console -->
+                            <div class="card glass card-glow">
+                                <div class="card-header">
+                                    <h3><i class="fa-solid fa-circle-check text-emerald"></i> Project Manager Console</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="milestones-list" id="pm-milestones"></div>
+                                </div>
+                            </div>
+
+                            <!-- Card 2: Customer Personas -->
+                            <div class="card glass card-glow">
+                                <div class="card-header">
+                                    <h3><i class="fa-solid fa-users text-blue"></i> Generated Customer Personas</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="personas-container" id="personas-container"></div>
+                                </div>
+                            </div>
+
+                            <!-- Card 3: AI Debate Chamber -->
+                            <div class="card glass card-glow">
+                                <div class="card-header">
+                                    <h3><i class="fa-solid fa-comments text-purple"></i> AI Debate Chamber</h3>
+                                </div>
+                                <div class="card-body debate-chamber-body">
+                                    <p class="card-desc mb-3">Domain agents debate startup strengths, saturation levels, and risks before giving judge verdicts.</p>
+                                    <div class="debate-messages" id="debate-messages"></div>
+                                </div>
+                            </div>
+
+                            <!-- Card 4: Interactive Lean Canvas -->
+                            <div class="card glass card-glow">
+                                <div class="card-header">
+                                    <h3><i class="fa-solid fa-border-all text-pink"></i> Interactive Lean Canvas</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="lean-canvas-grid">
+                                        <div class="canvas-box">
+                                            <h5>1. The Problem</h5>
+                                            <p id="canvas-problem"></p>
+                                        </div>
+                                        <div class="canvas-box">
+                                            <h5>2. Proposed Solution</h5>
+                                            <p id="canvas-solution"></p>
+                                        </div>
+                                        <div class="canvas-box">
+                                            <h5>3. Unique Value Prop</h5>
+                                            <p id="canvas-value-prop"></p>
+                                        </div>
+                                        <div class="canvas-box">
+                                            <h5>4. Key Metrics</h5>
+                                            <p id="canvas-metrics"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Card 5: Version History -->
+                            <div class="card glass card-glow">
+                                <div class="card-header">
+                                    <h3><i class="fa-solid fa-clock-rotate-left text-pink"></i> Startup Version History</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="timeline" id="version-timeline"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 3: Code & DevOps -->
+                    <div id="tab-builder" class="tab-pane">
+                        <div class="dashboard-grid">
+                            <!-- Card 1: Code Scaffolding -->
+                            <div class="card glass card-glow">
+                                <div class="card-header">
+                                    <h3><i class="fa-solid fa-code text-blue"></i> Generated Code Scaffolding</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="code-tab-headers">
+                                        <button class="code-select active" data-code="code-db">SQL Schema</button>
+                                        <button class="code-select" data-code="code-docker">Dockerfile</button>
+                                        <button class="code-select" data-code="code-action">GitHub Actions</button>
+                                    </div>
+                                    <div class="code-preview-block">
+                                        <pre id="code-content-box">Loading schema...</pre>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Card 2: MVP Deployment -->
+                            <div class="card glass deployment-card card-glow">
+                                <div class="card-header">
+                                    <h3><i class="fa-solid fa-cloud-arrow-up text-emerald"></i> One-Click MVP Deployment</h3>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-desc mb-3">Instantly push templates, spin up database migrations, and deploy to Vercel/Railway cloud services.</p>
+                                    <div class="action-buttons-grid">
+                                        <button id="github-btn" class="btn btn-github">
+                                            <i class="fa-brands fa-github"></i> Create GitHub Repo
+                                        </button>
+                                        <button id="deploy-btn" class="btn btn-deploy-mvp">
+                                            <i class="fa-solid fa-rocket"></i> Deploy MVP to Vercel
+                                        </button>
+                                    </div>
+                                    <div id="deploy-console" class="deploy-console hidden">
+                                        <div class="deploy-console-header">Deployment pipeline logs:</div>
+                                        <div id="deploy-logs" class="deploy-logs"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 4: Web & Media Generator (NEW MODULE) -->
+                    <div id="tab-webmedia" class="tab-pane">
+                        <div class="dashboard-grid">
+                            <!-- Card 1: Landing Page React/Next.js Code scaffold -->
+                            <div class="card glass card-glow">
+                                <div class="card-header">
+                                    <h3><i class="fa-solid fa-globe text-cyan"></i> Responsive Next.js & Tailwind Page Scaffold</h3>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-desc mb-3">Responsive react layout containing standard SEO tags, metadata layouts, copywriting blocks, and brand colors.</p>
+                                    <div class="action-buttons-grid mb-3">
+                                        <button id="gen-web-code-btn" class="btn btn-primary">
+                                            <i class="fa-solid fa-cog fa-spin hidden" id="web-spin-icon"></i>
+                                            <span>Generate Landing Page Code</span>
+                                        </button>
+                                    </div>
+                                    <div class="code-preview-block" style="max-height: 400px;">
+                                        <pre id="web-code-content-box">// Click the generate button to scaffold Next.js React code...</pre>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Card 2: Interactive Sandbox Preview iframe -->
+                            <div class="card glass card-glow">
+                                <div class="card-header">
+                                    <h3><i class="fa-solid fa-laptop text-emerald"></i> Live Sandbox Landing Page Preview</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="sandbox-iframe-wrapper">
+                                        <iframe id="sandbox-iframe" srcdoc="<body style='background: #0f172a; color: #9ca3af; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0;'>Click 'Generate Landing Page Code' to load the live visual preview.</body>"></iframe>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Card 3: AI Cinematic Ads Creator (Videos) -->
+                            <div class="card glass card-glow">
+                                <div class="card-header">
+                                    <h3><i class="fa-solid fa-clapperboard text-purple"></i> AI Cinematic Ads Creator</h3>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-desc mb-3">Forges visual storyboard scripts, cinematic overlays, music directions, and text animation cues.</p>
+                                    <div class="action-buttons-grid mb-4">
+                                        <button id="cinematic-play-btn" class="btn btn-primary btn-deploy-mvp">
+                                            <i class="fa-solid fa-play"></i> Play Cinematic Video Concept
+                                        </button>
+                                    </div>
+                                    <div class="video-container" style="border: 2px solid rgba(139, 92, 246, 0.25);">
+                                        <canvas id="cinematicVideoCanvas" width="600" height="340"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Card 4: AI High-Res Logo Design Asset -->
+                            <div class="card glass card-glow">
+                                <div class="card-header">
+                                    <h3><i class="fa-solid fa-palette text-pink"></i> AI Logo Image Design Asset</h3>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-desc mb-3">View and download your high-fidelity generated brand logo concept design as an actual image asset.</p>
+                                    <div class="logo-image-asset-box">
+                                        <img src="logo.jpg" alt="AI Generated Logo Design" class="logo-image-asset">
+                                    </div>
+                                    <div class="action-buttons-grid mt-3">
+                                        <a href="logo.jpg" download="startup_logo.jpg" class="btn btn-secondary text-center">
+                                            <i class="fa-solid fa-download"></i> Download Logo Image
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 5: Marketing & Pitch -->
+                    <div id="tab-marketing" class="tab-pane">
+                        <div class="dashboard-grid">
+                            <!-- Card 1: Identity & Domains -->
+                            <div class="card glass card-glow">
+                                <div class="card-header">
+                                    <h3><i class="fa-solid fa-tags text-pink"></i> Identity, Domains & Trademarks</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="logo-preview-box mb-4">
+                                        <h4>Generated Logo Concept:</h4>
+                                        <div id="logo-preview" class="logo-preview"></div>
+                                    </div>
+                                    <div class="brand-swatches" id="brand-colors-container"></div>
+                                    <div class="taglines-box mt-3">
+                                        <h4>Taglines:</h4>
+                                        <ul id="brand-taglines" class="tagline-list"></ul>
+                                    </div>
+                                    <div class="domain-checker mt-4">
+                                        <h4>Domain Name Availability:</h4>
+                                        <ul id="domain-list" class="domain-list"></ul>
+                                    </div>
+                                    <div class="trademark-checker mt-4">
+                                        <h4>Trademark Search:</h4>
+                                        <div class="trademark-box" id="trademark-result"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Card 2: Live Pricing & Assumptions -->
+                            <div class="card glass card-glow">
+                                <div class="card-header">
+                                    <h3><i class="fa-solid fa-calculator text-gold"></i> Live Pricing Model & Assumptions</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="sliders-box mb-4">
+                                        <div class="slider-item">
+                                            <div class="slider-lbl"><span>Monthly User Conversion Goal</span><strong id="val-conversion">500</strong></div>
+                                            <input type="range" id="slider-conversion" min="50" max="2500" value="500" step="50">
+                                        </div>
+                                        <div class="slider-item mt-3">
+                                            <div class="slider-lbl"><span>Average Subscription Contract Value (ACV)</span><strong id="val-price">$49/mo</strong></div>
+                                            <input type="range" id="slider-price" min="9" max="299" value="49" step="5">
+                                        </div>
+                                    </div>
+                                    <div class="pricing-cards mb-4" id="pricing-tiers-container"></div>
+                                    <div class="chart-container">
+                                        <canvas id="revenueChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Card 3: Investor Pitch Deck -->
+                            <div class="card glass card-glow">
+                                <div class="card-header">
+                                    <h3><i class="fa-solid fa-desktop text-purple"></i> Investor Pitch Deck</h3>
+                                </div>
+                                <div class="card-body pitch-deck-body">
+                                    <div id="pitch-slide-card" class="pitch-slide-card">
+                                        <h4 id="slide-title">Slide 1</h4>
+                                        <p id="slide-text">Slide text content goes here...</p>
+                                    </div>
+                                    <div class="pitch-nav-buttons mt-3">
+                                        <button id="prev-slide" class="btn btn-secondary btn-sm"><i class="fa-solid fa-arrow-left"></i> Back</button>
+                                        <span id="slide-number">1 / 5</span>
+                                        <button id="next-slide" class="btn btn-secondary btn-sm">Next <i class="fa-solid fa-arrow-right"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Card 4: AI Promo Video Concept -->
+                            <div class="card glass card-glow">
+                                <div class="card-header">
+                                    <h3><i class="fa-solid fa-video text-blue"></i> AI-Generated Promo Video Concept</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="video-container">
+                                        <canvas id="promoVideoCanvas" width="600" height="340"></canvas>
+                                        <button id="video-play-btn" class="video-play-btn"><i class="fa-solid fa-play" style="margin-left: 4px;"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 6: AI Mentor Chat -->
+                    <div id="tab-mentor" class="tab-pane">
+                        <div class="dashboard-grid">
+                            <div class="card glass mentor-chat-card card-glow">
+                                <div class="card-header">
+                                    <h3><i class="fa-solid fa-robot text-purple"></i> Coordinated AI Mentor Chat</h3>
+                                </div>
+                                <div class="card-body mentor-chat-body">
+                                    <div class="mentor-welcome">
+                                        <p>👋 Ask me anything about launching your MVP, product pricing structures, marketing launch steps, or beating your competitors!</p>
+                                    </div>
+                                    <div id="mentor-chat-logs" class="mentor-chat-logs"></div>
+                                    <form id="mentor-chat-form" class="mentor-chat-form mt-4">
+                                        <input type="text" id="mentor-chat-input" placeholder="e.g. Should I increase my pricing?" required>
+                                        <button type="submit" class="btn btn-primary chat-send-btn">
+                                            <i class="fa-solid fa-paper-plane"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+</body>
+</html>
