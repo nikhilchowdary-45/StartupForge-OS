@@ -9,6 +9,7 @@ import os
 from app.config import settings
 from app.agents.orchestrator import Orchestrator
 from app.database import register_user_db, login_user_db, update_user_credentials_db
+from app.agents.orchestrator import Orchestrator
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
