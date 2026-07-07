@@ -558,7 +558,9 @@ document.getElementById('idea-form').addEventListener('submit', async (e) => {
 });
 
 function connectWebSocket(taskId) {
-    const ws = new WebSocket(`${WS_BASE}/ws/logs/${taskId}`);
+    const WS_BASE = API_BASE
+        .replace("https://", "wss://")
+        .replace("http://", "ws://");
     const orchestrationStatus = document.getElementById('orchestration-status');
 
     orchestrationStatus.textContent = 'Agents running';
