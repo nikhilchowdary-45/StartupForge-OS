@@ -558,19 +558,28 @@ document.getElementById('idea-form').addEventListener('submit', async (e) => {
 });
 
 function connectWebSocket(taskId) {
+
     const WS_BASE = API_BASE
         .replace("https://", "wss://")
         .replace("http://", "ws://");
-    const orchestrationStatus = document.getElementById('orchestration-status');
 
-    orchestrationStatus.textContent = 'Agents running';
+    const ws = new WebSocket(`${WS_BASE}/ws/logs/${taskId}`);
+
+    const orchestrationStatus =
+        document.getElementById("orchestration-status");
+
+    orchestrationStatus.textContent = "Agents running";
+
+    ws.onopen = () => {
+        console.log("WebSocket Connected");
+    };
 
     ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
 
-        if (data.status === 'completed') {
-            orchestrationStatus.textContent = 'Completed';
-            orchestrationStatus.className = 'status-badge success';
+        if (data.status === "completed") {
+            orchestrationStatus.textContent = "Completed";
+            orchestrationStatus.className = "status-badge success";
             ws.close();
             fetchResults(taskId);
         } else if (data.agent && data.message) {
@@ -578,9 +587,13 @@ function connectWebSocket(taskId) {
         }
     };
 
-    ws.onerror = (error) => {
-        console.error('WS Error:', error);
-        appendLog('orchestrator', 'WebSocket connection encountered an error.');
+    ws.onerror = (err) => {
+        console.error("WebSocket Error:", err);
+        appendLog("orchestrator", "WebSocket connection failed.");
+    };
+
+    ws.onclose = () => {
+        console.log("WebSocket Closed");
     };
 }
 
